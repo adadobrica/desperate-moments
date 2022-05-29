@@ -1,0 +1,92 @@
+Copyright 2022 Dobrica Nicoleta Adriana 311CA
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+-> DESCRIPTION:
+
+This homework implements a generic array; the elements of the generic array
+are a structure (data_structure). Simply put, this generic array is a block
+of memory, so we do not know how to access the next element like in a normal
+array, so we use this data_structure. 
+
+All elements from this array have a header, which contains all the information
+we need to manipulate the array: what type of data we have (there are 3 types)
+and the total length of the data we have (the sum of the sizes). Next, we need
+the actual data in our element, so we will put the given data at the next
+available address in our array, which will be arr + sizeof(head) (if we are
+talking about the first element in the array).
+
+This program implements a few functions that can manipulate the generic array.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+-> ADD_LAST:
+
+This function adds a new element at the end of the generic array. Since we
+cannot access easily the elements of said array (like with the help of indices)
+we need to realloc new memory every time we add a new element on the last
+position.
+
+Firstly, we add the header of the data we want into our array (the data type
+and data len), then the actual data. After adding the new element, the length
+of the array is increased (we add the initial length, the size of the head
+structure and the length of the data we added into the array on the last position).
+
+This function returns 0 if everything works according to plan, or -1 if reallocating
+memory for the array fails.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+-> ADD_AT 
+
+Similarly to our add_last function, we reallocate new memory for our array.
+Since we have a given index to know which position we need to add our element
+at, we need to iterate through our array.
+
+This is done similarly like traversing through a simply linked list. We have a
+current that initially is our array (which points to our first element), then 
+we move to the next element in the array after adding to our current the length
+of our current element and the size of the head structure.
+
+After our current points to the position we need to add the new element, we add
+the head of the new data and then the actual data.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+-> FIND
+
+This function finds the element at the given index and prints the data in a
+certain format. Firstly, we iterate through our array like we have done in the 
+add_at function, then we take all our data from the current element. 
+
+After we have our data, we print the elements in the specified format.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+-> DELETE_AT 
+
+This function does the opposite of our add_at function; we also reallocate new
+memory, but the total length of the array will decrease. We iterate through the 
+array, find our element we want to delete, and then we delete it from memory
+completely.
+
+To do this, we need to allocate memory for a temporary array, in which we will
+store the next element of our array. After doing this, we copy our temporary array
+into our destination, which will be the element we want to delete. 
+
+After we are done deleting the element, we decrease our array length.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+-> PRINT 
+
+This function prints all of the elements from our array in a specified format.
+The idea behind this function is similar to the find function, only we
+need to traverse the entire array, so we iterate through it until our current
+element is bigger than our array + our array length. We get each current element,
+then we print it exactly like in the find function.
+
+The data we take from our element in the array is done with the help of the 
+header of the current element. 
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

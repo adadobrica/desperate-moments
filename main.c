@@ -1,3 +1,4 @@
+// Copyright 2022 Dobrica Nicoleta Adriana 311CA
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -8,17 +9,25 @@
 
 int add_last(void **arr, int *len, data_structure *data)
 {
+	// creating a temporary generic array
+
 	void *tmp;
 	tmp = realloc(*arr, *len + sizeof(head) + data->header->len);
 	if (tmp == NULL) {
 		return -1;
 	}
 	*arr = tmp;
+
+	// firstly, we add the information we need to know about our data (its type and length)
+
 	memcpy(*arr + *len, data->header, sizeof(head));
+
+	// then we put the actual data into our array
+
 	memcpy(*arr + *len + sizeof(head), data->data, data->header->len);
 
 	*len = *len + sizeof(head) + data->header->len;
-	return 1;
+	return 0;
 }
 
 int add_at(void **arr, int *len, data_structure *data, int index)
@@ -30,17 +39,27 @@ int add_at(void **arr, int *len, data_structure *data, int index)
 		return -1;
 	}
 	*arr = tmp;
-	void *current = *arr;
 
+	// we need a current to help us traverse our array
+
+	void *current = *arr;
 
 	for (int i = 0; i < index; i++) {
 		current = current + ((head *)current)->len + sizeof(head);
+
+		// if the current index is bigger than our array
+
 		if (current > *arr + *len) {
 			return add_last(arr, len, data);
 		}
 	}
 
+	// we allocate memory for our temporary array
+
 	tmp = malloc(*len + *arr - current);
+
+	// adding a new element into our array
+
 	memcpy(tmp, current, *len + *arr - current);
 	memcpy(current + data->header->len + sizeof(head), tmp, *len + *arr - current);
 	memcpy(current, data->header, sizeof(head));
@@ -48,16 +67,20 @@ int add_at(void **arr, int *len, data_structure *data, int index)
 
 	*len = *len + sizeof(head) + data->header->len;
 	free(tmp);
-	return 1;
+	return 0;
 }
 
 void find(void *data_block, int len, int index) 
 {	
+	// we iterate through our array until we find the element we want to print
+
 	void *current = data_block;
 	for (int i = 0; i < index; i++) {
 		current = current + ((head *)current)->len + sizeof(head);
 	}
 	
+	// printing the data in the specified format, treating individually each type
+
 	printf("Tipul %c\n", ((head *)current)->type);
 	
 	if (((head *)current)->type == '1') {
@@ -92,7 +115,7 @@ void find(void *data_block, int len, int index)
 
 int delete_at(void **arr, int *len, int index)
 {
-	
+	// finding the element we want to delete
 	void *current = *arr;
 	for (int i = 0; i < index; i++) {
 		current = current + ((head *)current)->len + sizeof(head);
@@ -100,20 +123,28 @@ int delete_at(void **arr, int *len, int index)
 
 	void *tmp = malloc(*len + *arr - current - sizeof(head) - ((head *)current)->len);
 
+	// copying the next element into our temporary array
+
 	memcpy(tmp, current + ((head *)current)->len + sizeof(head), *len + *arr - current - sizeof(head) - ((head *)current)->len);
 	
 	unsigned int aux = ((head *)current)->len;
 
+	// deleting our current element
+
 	memcpy(current, tmp, *len + *arr - current - sizeof(head) - ((head *)current)->len);
+
+	// changing the size our array and then decreasing its length
+
 	void *tmp2 = realloc(*arr, *len - sizeof(head) - aux);
 	*arr = tmp2;
 	*len = *len - sizeof(head) - aux;
 	free(tmp);
-	return 1;
+	return 0;
 }
 
 void print(void *arr, int len) 
 {
+	// we iterate through our array and then print the data in the given format
 	void *current = arr;
 	while (current < arr + len) {	
 		printf("Tipul %c\n", ((head *)current)->type);
@@ -212,7 +243,7 @@ int main() {
 				memcpy(manele_master->data + sizeof(char) * (strlen(name1) + 1) + 2 * sizeof(int32_t), name2, sizeof(char) * (strlen(name2) + 1));
 			}
 				
-			int ok = add_last(&arr, &len, manele_master);
+			add_last(&arr, &len, manele_master);
 			free(manele_master->data);
 		} else if (strcmp(command, "insert_at") == 0) {
 			scanf("%d", &index);
